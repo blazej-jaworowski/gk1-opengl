@@ -1,17 +1,15 @@
-#include <iostream>
-#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-{
+#include <iostream>
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     glViewport(0, 0, width, height);
 }
 
-int main()
-{
-    if (!glfwInit())
-    {
-        std::cerr << "ERROR: Could not initialize GLFW\n";
+int main() {
+    if (!glfwInit()) {
+        std::cerr << "ERROR: Failed to initialize GLFW\n";
         return -1;
     }
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -20,26 +18,23 @@ int main()
 
     GLFWwindow *window = glfwCreateWindow(800, 600, "Garden", NULL, NULL);
 
-    if (window == NULL)
-    {
-        std::cerr << "ERROR: Could not create window\n";
+    if (window == NULL) {
+        std::cerr << "ERROR: Failed to create window\n";
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        std::cerr << "ERROR: Failed to initialize GLAD\n";
         return -1;
     }
 
     glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    while (!glfwWindowShouldClose(window))
-    {
+    while (!glfwWindowShouldClose(window)) {
         glClearColor(1, 1, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
 
