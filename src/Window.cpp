@@ -4,9 +4,12 @@
 
 #include "Model.h"
 
+#include <glm/gtc/matrix_transform.hpp>
+
 void Window::framebuffer_size_callback(GLFWwindow *window, int width,
                                        int height) {
     glViewport(0, 0, width, height);
+    glEnable(GL_DEPTH_TEST);
 }
 
 Window::Window(int width, int height) : width(width), height(height) {}
@@ -44,19 +47,34 @@ void Window::run() {
 }
 
 void Window::loop() {
-    float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
-                        0.0f,  0.0f,  0.5f, 0.0f};
-    int faces[] = {0, 1, 2};
-    Model model1(vertices, 3, faces, 1, "vertex_shader.vert",
+    float vertices[] = {0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1};
+    uint32_t faces[] = {1, 2, 3, 0, 2, 3, 0, 1, 3, 0, 1, 2};
+    Model model1(vertices, 4, faces, 4, "vertex_shader.vert",
+                 "fragment_shader.frag");
+    Model model2(vertices, 4, faces, 4, "vertex_shader.vert",
                  "fragment_shader.frag");
 
-    vertices[1] = 0.5f;
-    Model model2(vertices, 3, faces, 1, "vertex_shader.vert",
-                 "fragment_shader.frag");
+    model1.set_model_matrix(glm::mat4(1.0f));
+    model1.set_projection_matrix(glm::perspective(
+        glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f));
+    model1.set_view_matrix(glm::lookAt(
+        glm::vec3(2, 2, 2), glm::vec3(0, 0, 0.5f), glm::vec3(0, 0, 1)));
+
+    model2.set_model_matrix(glm::mat4(1.0f));
+    model2.set_projection_matrix(glm::perspective(
+        glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f));
+    model2.set_view_matrix(glm::lookAt(
+        glm::vec3(2, 2, 2), glm::vec3(0, 0, 0.5f), glm::vec3(0, 0, 1)));
+
+    glClearColor(0, 0, 0, 1);
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(0, 1, 0, 1);
-        glClear(GL_COLOR_BUFFER_BIT);
+        model1.set_model_matrix(glm::rotate(
+            glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0, 0, 1)));
 
+        model2.set_model_matrix(glm::rotate(
+            glm::mat4(1.0f), (float)glfwGetTime() * 2, glm::vec3(0, 1, 1)));
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         model1.draw();
         model2.draw();
 
