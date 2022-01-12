@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Model.h"
+
 void Window::framebuffer_size_callback(GLFWwindow *window, int width,
                                        int height) {
     glViewport(0, 0, width, height);
@@ -42,9 +44,21 @@ void Window::run() {
 }
 
 void Window::loop() {
+    float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f,
+                        0.0f,  0.0f,  0.5f, 0.0f};
+    int faces[] = {0, 1, 2};
+    Model model1(vertices, 3, faces, 1, "vertex_shader.vert",
+                 "fragment_shader.frag");
+
+    vertices[1] = 0.5f;
+    Model model2(vertices, 3, faces, 1, "vertex_shader.vert",
+                 "fragment_shader.frag");
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(1, 1, 0, 1);
+        glClearColor(0, 1, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        model1.draw();
+        model2.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
