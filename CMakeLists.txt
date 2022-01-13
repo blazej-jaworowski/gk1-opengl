@@ -14,6 +14,5 @@ set_property(TARGET garden PROPERTY CXX_STANDARD 17)
 target_include_directories(garden PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)
 target_link_libraries(garden glfw dl)
 
-configure_file(src/vertex_shader.vert vertex_shader.vert COPYONLY)
-configure_file(src/fragment_shader.frag fragment_shader.frag COPYONLY)
-configure_file(teapot.obj teapot.obj COPYONLY)
+file(COPY "models" DESTINATION ".")
+file(COPY "shaders" DESTINATION ".")

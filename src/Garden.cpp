@@ -8,10 +8,11 @@
 #include "ObjLoader.h"
 
 void Garden::init(int width, int height) {
-    ObjLoader loader("teapot.obj");
+    ObjLoader loader("models/teapot.obj");
     models.emplace_back(loader.vertices, loader.normals, loader.vertex_count,
-                        loader.faces, loader.face_count, "vertex_shader.vert",
-                        "fragment_shader.frag");
+                        loader.faces, loader.face_count,
+                        "shaders/vertex_shader.vert",
+                        "shaders/fragment_shader.frag");
 
     models[0].set_material({glm::vec3(1.0f, 1.0f, 0.0f),
                             glm::vec3(1.0f, 1.0f, 0.0f),
