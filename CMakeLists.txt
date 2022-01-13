@@ -7,7 +7,8 @@ add_executable(garden src/main.cpp glad/src/glad.c
                       src/Model.cpp src/Model.h
                       src/Shader.cpp src/Shader.h
                       src/ObjLoader.cpp src/ObjLoader.h
-                      src/Garden.cpp src/Garden.h)
+                      src/Garden.cpp src/Garden.h
+                      src/structs.h)
 
 set_property(TARGET garden PROPERTY CXX_STANDARD 17)
 target_include_directories(garden PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/glad/include)

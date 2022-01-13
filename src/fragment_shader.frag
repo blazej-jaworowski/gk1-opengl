@@ -6,22 +6,40 @@ in vec3 normal;
 
 out vec4 FragColor;
 
-uniform vec3 object_color;
+struct Material {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    float shininess;
+};
+
+struct SunLight {
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+    vec3 direction;
+};
+
+uniform Material material;
+uniform SunLight sun_light;
+
+uniform vec3 camera_pos;
+
+vec3 get_sun_light(vec3 norm) {
+    vec3 ambient = sun_light.ambient * material.ambient;
+    vec3 diffuse = max(dot(-sun_light.direction, norm), 0.0)
+                 * sun_light.diffuse * material.diffuse;
+    vec3 view_dir = normalize(camera_pos - frag_pos);
+    vec3 reflect_dir = reflect(-sun_light.direction, norm);
+    vec3 specular = pow(max(dot(view_dir, reflect_dir), 0.0), material.shininess)
+                    * sun_light.specular * material.specular;
+
+    return ambient + diffuse + specular;
+};
 
 void main()
 {
-    vec3 ambient_light_color = vec3(1.0, 1.0, 1.0);
-    float ambient_strength = 0.1;
-
-    vec3 light_color = vec3(1.0, 1.0, 1.0);
-    vec3 light_pos = vec3(5.0, 0.0, 10.0);
-    float light_strength = 1.0;
-
-    vec3 ambient = ambient_light_color * object_color * ambient_strength;
-
     vec3 norm = normalize(normal);
-    vec3 light_dir = normalize(light_pos - frag_pos);
-    vec3 diffuse = light_color * max(dot(norm, light_dir), 0.0) * light_strength;
-
-    FragColor = vec4(object_color * (diffuse + ambient), 1.0);
+    vec3 color = get_sun_light(norm);
+    FragColor = vec4(color, 1.0);
 } 

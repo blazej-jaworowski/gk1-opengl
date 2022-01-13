@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include "structs.h"
+
 class Model {
     uint32_t vbo;
     uint32_t vao;
@@ -14,6 +16,8 @@ class Model {
 
     void link_shaders(std::string vertex_filename, std::string shader_filename);
     void set_mat4_uniform(std::string name, glm::mat4 value);
+    void set_vec3_uniform(std::string name, glm::vec3 value);
+    void set_float_uniform(std::string name, float value);
 
   public:
     Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
@@ -23,5 +27,6 @@ class Model {
     void set_model_matrix(glm::mat4 model_matrix);
     void set_view_matrix(glm::mat4 view_matrix);
     void set_projection_matrix(glm::mat4 projection_matrix);
-    void set_color(float r, float g, float b);
+    void set_material(Material material);
+    void set_sun_light(SunLight sun_light);
 };
