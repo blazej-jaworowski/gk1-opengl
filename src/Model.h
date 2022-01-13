@@ -17,7 +17,7 @@ class Model {
 
   public:
     Model(float *vertices, int vertex_count, uint32_t *faces, int face_count,
-          std::string vertex_filename, std::string shader_filename);
+          std::string vertex_filename, std::string fragment_filename);
     void draw();
     void set_model_matrix(glm::mat4 model_matrix);
     void set_view_matrix(glm::mat4 view_matrix);

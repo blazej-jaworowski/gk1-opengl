@@ -7,5 +7,5 @@ out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(frag_pos.z, 0, 1.0, 1.0);
+    FragColor = vec4(frag_pos.z / 3, 0, 1.0, 1.0);
 } 

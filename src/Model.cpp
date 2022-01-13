@@ -34,7 +34,7 @@ Model::Model(float *vertices, int vertex_count, uint32_t *faces, int face_count,
 }
 
 void Model::link_shaders(std::string vertex_filename,
-                         std::string shader_filename) {
+                         std::string fragment_filename) {
     Shader vertex_shader("vertex_shader.vert", GL_VERTEX_SHADER);
     Shader fragment_shader("fragment_shader.frag", GL_FRAGMENT_SHADER);
 

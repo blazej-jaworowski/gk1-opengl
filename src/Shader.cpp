@@ -26,6 +26,8 @@ Shader::Shader(std::string filename, uint32_t type) : type(type) {
     glShaderSource(id, 1, &source, NULL);
     glCompileShader(id);
 
+    delete[] source;
+
     int success;
     char info_log[512];
 
