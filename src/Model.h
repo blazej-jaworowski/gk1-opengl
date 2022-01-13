@@ -16,10 +16,12 @@ class Model {
     void set_mat4_uniform(std::string name, glm::mat4 value);
 
   public:
-    Model(float *vertices, int vertex_count, uint32_t *faces, int face_count,
-          std::string vertex_filename, std::string fragment_filename);
+    Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
+          int face_count, std::string vertex_filename,
+          std::string fragnent_filename);
     void draw();
     void set_model_matrix(glm::mat4 model_matrix);
     void set_view_matrix(glm::mat4 view_matrix);
     void set_projection_matrix(glm::mat4 projection_matrix);
+    void set_color(float r, float g, float b);
 };

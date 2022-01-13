@@ -7,8 +7,12 @@
 
 class ObjLoader {
   public:
-    std::vector<std::tuple<float, float, float>> vertices;
-    std::vector<std::tuple<int, int, int>> faces;
+    int vertex_count;
+    float *vertices;
+    float *normals;
+    int face_count;
+    uint32_t *faces;
 
     ObjLoader(std::string filename);
+    ~ObjLoader();
 };
