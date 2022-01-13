@@ -26,7 +26,7 @@ float *merge_vertex_data(float *vertices, float *normals, int vertex_count) {
 
 Model::Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
              int face_count, std::string vertex_filename,
-             std::string fragnent_filename)
+             std::string fragment_filename)
     : element_count(face_count * 3) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
@@ -50,7 +50,7 @@ Model::Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
                           (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    link_shaders(vertex_filename, fragnent_filename);
+    link_shaders(vertex_filename, fragment_filename);
 }
 
 void Model::link_shaders(std::string vertex_filename,

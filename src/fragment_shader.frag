@@ -23,8 +23,5 @@ void main()
     vec3 light_dir = normalize(light_pos - frag_pos);
     vec3 diffuse = light_color * max(dot(norm, light_dir), 0.0) * light_strength;
 
-    // FragColor = vec4(norm, 1.0);
-    // float v = length(light_pos - frag_pos);
-    // FragColor = vec4(vec3(v), 1.0);
     FragColor = vec4(object_color * (diffuse + ambient), 1.0);
 } 

@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Garden.h"
 #include "Model.h"
 #include "ObjLoader.h"
 
@@ -43,35 +44,18 @@ void Window::run() {
             glViewport(0, 0, width, height);
             Window *w = (Window *)glfwGetWindowUserPointer(window);
             w->update_size_values(width, height);
-            // TODO: update projection matrices
         });
 
     loop();
 }
 
 void Window::loop() {
-    ObjLoader loader("teapot.obj");
-    Model model(loader.vertices, loader.normals, loader.vertex_count,
-                loader.faces, loader.face_count, "vertex_shader.vert",
-                "fragment_shader.frag");
-
-    model.set_projection_matrix(glm::perspective(
-        glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f));
-    model.set_view_matrix(glm::lookAt(glm::vec3(4, 4, 4), glm::vec3(0, 0, 1),
-                                      glm::vec3(0, 0, 1)));
-
-    model.set_color(1, 0, 1);
-
+    garden.init(width, height);
     glClearColor(0, 0, 0, 1);
     while (!glfwWindowShouldClose(window)) {
-        glm::mat4 model_matrix(1.0f);
-        model_matrix =
-            glm::rotate(model_matrix, (float)glfwGetTime(), glm::vec3(0, 0, 1));
-        model_matrix = glm::rotate(model_matrix, M_PI_2f32, glm::vec3(1, 0, 0));
-        model.set_model_matrix(model_matrix);
-
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        model.draw();
+
+        garden.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -81,4 +65,5 @@ void Window::loop() {
 void Window::update_size_values(int width, int height) {
     this->width = width;
     this->height = height;
+    garden.update_projection(width, height);
 }
