@@ -4,8 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include <glad/glad.h>
-
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 Shader::Shader(std::string filename, uint32_t type) : type(type) {

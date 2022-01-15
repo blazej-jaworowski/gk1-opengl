@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-#include <glad/glad.h>
-
+#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <glm/gtc/type_ptr.hpp>
@@ -27,7 +26,8 @@ float *merge_vertex_data(float *vertices, float *normals, int vertex_count) {
 Model::Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
              int face_count, std::string vertex_filename,
              std::string fragment_filename)
-    : element_count(face_count * 3) {
+    : element_count(face_count * 3), position(0.0f), rotation(1.0f),
+      model_scale(1.0f) {
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
 
@@ -52,7 +52,7 @@ Model::Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
 
     link_shaders(vertex_filename, fragment_filename);
 
-    set_model_matrix(glm::mat4(1.0f));
+    update_model_matrix();
 }
 
 void Model::link_shaders(std::string vertex_filename,
@@ -70,8 +70,10 @@ void Model::link_shaders(std::string vertex_filename,
     glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
     if (!success) {
         glGetProgramInfoLog(shader_program, 512, NULL, info_log);
-        std::cerr << "ERROR: Failed to link shader program\n"
+        std::cerr << "ERROR(" << vertex_filename << ", " << fragment_filename
+                  << "): Failed to link shader program\n"
                   << info_log << '\n';
+        exit(1);
     }
 
     glDeleteShader(vertex_shader.get_id());
@@ -86,6 +88,12 @@ void Model::set_mat4_uniform(std::string name, glm::mat4 value) {
         return;
     }
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Model::update_model_matrix() {
+    glm::mat4 translation_matrix = glm::translate(glm::mat4(1.0f), position);
+    glm::mat4 scale_matrix = glm::scale(glm::mat4(1.0f), model_scale);
+    Model::set_model_matrix(translation_matrix * rotation * scale_matrix);
 }
 
 void Model::set_model_matrix(glm::mat4 model_matrix) {
@@ -127,11 +135,15 @@ void Model::set_material(Material material) {
     set_float_uniform("material.shininess", material.shininess);
 }
 
-void Model::set_sun_light(SunLight sun_light) {
-    set_vec3_uniform("sun_light.ambient", sun_light.ambient);
-    set_vec3_uniform("sun_light.diffuse", sun_light.diffuse);
-    set_vec3_uniform("sun_light.specular", sun_light.specular);
-    set_vec3_uniform("sun_light.direction", sun_light.direction);
+void Model::set_dir_light(DirLight dir_light, int index) {
+    set_vec3_uniform("dir_lights[" + std::to_string(index) + "].ambient",
+                     dir_light.ambient);
+    set_vec3_uniform("dir_lights[" + std::to_string(index) + "].diffuse",
+                     dir_light.diffuse);
+    set_vec3_uniform("dir_lights[" + std::to_string(index) + "].specular",
+                     dir_light.specular);
+    set_vec3_uniform("dir_lights[" + std::to_string(index) + "].direction",
+                     dir_light.direction);
 }
 
 void Model::draw() {
@@ -140,3 +152,35 @@ void Model::draw() {
     glDrawElements(GL_TRIANGLES, element_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 };
+
+void Model::translate(glm::vec3 v) {
+    position += v;
+    update_model_matrix();
+}
+
+void Model::rotate(float angle, glm::vec3 v) {
+    rotation = glm::rotate(rotation, angle, v);
+    update_model_matrix();
+}
+
+void Model::scale(glm::vec3 s) {
+    model_scale *= s;
+    update_model_matrix();
+}
+
+void Model::scale(float s) {
+    model_scale *= glm::vec3(s);
+    update_model_matrix();
+}
+
+void Model::set_reflection_model(bool blinn) {
+    glUseProgram(shader_program);
+    int32_t location = glGetUniformLocation(shader_program, "blinn_reflection");
+    if (location == -1) {
+        std::cerr << "ERROR: Uniform "
+                  << "blinn_reflection"
+                  << " not found\n";
+        return;
+    }
+    glUniform1i(location, blinn);
+}

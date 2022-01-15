@@ -32,8 +32,8 @@ void Window::run() {
 
     glfwMakeContextCurrent(window);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cerr << "ERROR: Failed to initialize GLAD\n";
+    if (glewInit() != GLEW_OK) {
+        std::cerr << "ERROR: Failed to initialize GLEW\n";
         exit(-1);
     }
 
@@ -51,10 +51,10 @@ void Window::run() {
 
 void Window::loop() {
     garden.init(width, height);
-    glClearColor(0, 1, 0, 1);
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        garden.update();
         garden.draw();
 
         glfwSwapBuffers(window);

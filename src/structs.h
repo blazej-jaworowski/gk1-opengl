@@ -9,7 +9,7 @@ struct Material {
     float shininess;
 };
 
-struct SunLight {
+struct DirLight {
     glm::vec3 ambient;
     glm::vec3 diffuse;
     glm::vec3 specular;
