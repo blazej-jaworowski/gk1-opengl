@@ -54,34 +54,30 @@ void Garden::init(int width, int height) {
     update_projection(width, height);
 
     set_reflection_model(false);
+
+    update_sun(0.25f);
+    update_sky(0.25f);
     update();
 }
 
 void Garden::update() {
-    float time = (float)glfwGetTime();
-
-    set_reflection_model((int)time % 2);
-
     float radius = 17.0f;
     // update_camera(
     //     glm::vec3(radius * std::sin(time), radius * std::cos(time), 5),
     //     glm::vec3(0, 0, 2));
     update_camera(glm::vec3(5, -17, 7), glm::vec3(0, 0, 2));
-
-    update_sun(time);
-    update_sky(time);
 }
 
 void Garden::update_sun(float time) {
     glm::vec3 sunset_color(1, 0.4, 0);
     glm::vec3 noon_color(0.8, 0.8, 0.4);
-    float factor = std::sin(time * M_2_PI);
+    float factor = std::sin(time * 2 * M_PI);
     if (factor > 0) {
         glm::vec3 sun_color =
             factor * (sunset_color + factor * (noon_color - sunset_color));
         set_dir_light(sun_color.x, sun_color.y, sun_color.z,
-                      glm::normalize(glm::vec3(std::cos(time * M_2_PI), -0.1f,
-                                               -std::sin(time * M_2_PI))),
+                      glm::normalize(glm::vec3(std::cos(time * 2 * M_PI), -0.1f,
+                                               -std::sin(time * 2 * M_PI))),
                       0);
     } else {
         set_dir_light(0, 0, 0, glm::vec3(0, 0, -1), 0);
@@ -93,7 +89,7 @@ void Garden::update_sky(float time) {
     glClearColor(0, 0, 0, 1);
     glm::vec3 sunset_color(0, 0, 1);
     glm::vec3 noon_color(0, 0.5, 1);
-    float factor = std::sin(time * M_2_PI);
+    float factor = std::sin(time * 2 * M_PI);
     if (factor > -0.2) {
         glm::vec3 sky_color =
             factor * (noon_color + factor * (noon_color - sunset_color));
