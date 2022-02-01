@@ -23,6 +23,7 @@ void Garden::add_scene_models() {
     model.set_material({glm::vec3(0.913, 0.737, 0.1841),
                         glm::vec3(0.913, 0.737, 0.1841),
                         glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
+    model.scale(0.2);
 
     model =
         add_model_from_files("models/plane.obj", "shaders/vertex_shader.vert",
@@ -59,7 +60,10 @@ void Garden::init(int width, int height) {
     update_camera(glm::vec3(5, -17, 7), glm::vec3(0, 0, 2));
 }
 
-void Garden::update(float dt) { bee.update(dt); }
+void Garden::update(float dt) {
+    bee.update(dt);
+    update_camera(glm::vec3(20, 0, 7), bee.get_position());
+}
 
 void Garden::update_sun(float time) {
     glm::vec3 sunset_color(1, 0.4, 0);

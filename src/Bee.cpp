@@ -7,18 +7,33 @@
 Bee::Bee() {}
 
 Bee::Bee(Model *bee_model)
-    : bee_model(bee_model), position(0, 1, 3), velocity(1.5, 0, 0),
-      target(0, 0, 4) {
+    : bee_model(bee_model), position(0, 0, 3), velocity(0, 1, 1),
+      target(0, 0, 3) {
+    set_destination(glm::vec3(10, 0, 3), 10);
     update_model();
 }
 
-void Bee::update(float dt) {
+void Bee::update_target(float dt) {
+    if (time_until_destination < dt) {
+        target = destination;
+        return;
+    }
+    target = target + (destination - target) * (dt / time_until_destination);
+    time_until_destination -= dt;
+}
+
+void Bee::update_physics(float dt) {
     glm::vec3 acceleration = (target - position);
     velocity += acceleration * dt;
-    if (glm::length(velocity) > 1) {
-        velocity = glm::normalize(velocity);
+    if (glm::length(velocity) > 2) {
+        velocity = glm::normalize(velocity) * 2.0f;
     }
     position += velocity * dt;
+}
+
+void Bee::update(float dt) {
+    update_target(dt);
+    update_physics(dt);
     update_model();
 }
 
@@ -45,3 +60,10 @@ void Bee::update_model() {
     bee_model->set_rotation(rotation);
     bee_model->set_position(position);
 }
+
+void Bee::set_destination(glm::vec3 dest, float time) {
+    destination = dest;
+    time_until_destination = time;
+}
+
+const glm::vec3 &Bee::get_position() const { return position; }

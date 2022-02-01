@@ -9,9 +9,17 @@ class Bee {
     glm::vec3 velocity;
     glm::vec3 target;
 
+    glm::vec3 destination;
+    float time_until_destination;
+
+    void update_model();
+    void update_physics(float dt);
+    void update_target(float dt);
+
   public:
     Bee();
     Bee(Model *bee_model);
     void update(float dt);
-    void update_model();
+    void set_destination(glm::vec3 dest, float time);
+    const glm::vec3 &get_position() const;
 };
