@@ -35,7 +35,9 @@ class Model {
     void set_dir_light(DirLight sun_light, int index);
     void update_model_matrix();
     void translate(glm::vec3 v);
+    void set_position(glm::vec3 position);
     void rotate(float angle, glm::vec3 v);
+    void set_rotation(glm::mat4 r);
     void scale(float s);
     void scale(glm::vec3 s);
 };

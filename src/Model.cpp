@@ -151,7 +151,7 @@ void Model::draw() {
     glBindVertexArray(vao);
     glDrawElements(GL_TRIANGLES, element_count, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-};
+}
 
 void Model::translate(glm::vec3 v) {
     position += v;
@@ -160,6 +160,11 @@ void Model::translate(glm::vec3 v) {
 
 void Model::rotate(float angle, glm::vec3 v) {
     rotation = glm::rotate(rotation, angle, v);
+    update_model_matrix();
+}
+
+void Model::set_rotation(glm::mat4 r) {
+    rotation = r;
     update_model_matrix();
 }
 
@@ -183,4 +188,9 @@ void Model::set_reflection_model(bool blinn) {
         return;
     }
     glUniform1i(location, blinn);
+}
+
+void Model::set_position(glm::vec3 position) {
+    this->position = position;
+    update_model_matrix();
 }

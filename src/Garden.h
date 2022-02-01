@@ -3,12 +3,14 @@
 #include <glm/glm.hpp>
 #include <vector>
 
+#include "Bee.h"
 #include "Model.h"
 #include "structs.h"
 
 class Garden {
   private:
     std::vector<Model> models;
+    Bee bee;
     glm::vec3 get_sky_color(float time);
     glm::vec3 get_sun_color(float time);
     void update_sun(float time);
@@ -26,6 +28,6 @@ class Garden {
     void set_dir_light(DirLight sun_light, int index);
     void set_dir_light(float r, float g, float b, glm::vec3 direction,
                        int index);
-    void update();
+    void update(float dt);
     void draw();
 };

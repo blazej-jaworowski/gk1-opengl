@@ -16,14 +16,13 @@ Model &Garden::add_model_from_files(std::string obj_filename,
 }
 
 void Garden::add_scene_models() {
+    // Bee always first
     Model &model =
         add_model_from_files("models/bee.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
     model.set_material({glm::vec3(0.913, 0.737, 0.1841),
                         glm::vec3(0.913, 0.737, 0.1841),
                         glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
-    model.rotate(M_PI_2f32, glm::vec3(1.0f, 0.0f, 0.0f));
-    model.translate(glm::vec3(0, 0, 3));
 
     model =
         add_model_from_files("models/plane.obj", "shaders/vertex_shader.vert",
@@ -51,22 +50,16 @@ void Garden::add_scene_models() {
 
 void Garden::init(int width, int height) {
     add_scene_models();
+    bee = Bee(&models.at(0));
     update_projection(width, height);
 
     set_reflection_model(false);
-
     update_sun(0.25f);
     update_sky(0.25f);
-    update();
-}
-
-void Garden::update() {
-    float radius = 17.0f;
-    // update_camera(
-    //     glm::vec3(radius * std::sin(time), radius * std::cos(time), 5),
-    //     glm::vec3(0, 0, 2));
     update_camera(glm::vec3(5, -17, 7), glm::vec3(0, 0, 2));
 }
+
+void Garden::update(float dt) { bee.update(dt); }
 
 void Garden::update_sun(float time) {
     glm::vec3 sunset_color(1, 0.4, 0);

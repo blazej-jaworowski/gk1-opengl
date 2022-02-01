@@ -51,11 +51,16 @@ void Window::run() {
 
 void Window::loop() {
     garden.init(width, height);
+    float prev_time = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        garden.update();
+        float time = glfwGetTime();
+
+        garden.update(time - prev_time);
         garden.draw();
+
+        prev_time = time;
 
         glfwSwapBuffers(window);
         glfwPollEvents();
