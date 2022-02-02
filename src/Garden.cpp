@@ -58,6 +58,14 @@ void Garden::add_scene_models() {
     model_rose2.scale(0.2f);
     model_rose2.translate(glm::vec3(-2, -2, 0));
     destinations.push_back(glm::vec3(-2, -2.2, 3.2));
+
+    Model &model_rock =
+        add_model_from_files("models/sphere.obj", "shaders/vertex_shader.vert",
+                             "shaders/fragment_shader.frag");
+    model_rock.set_material({glm::vec3(0.6, 0.6, 1), glm::vec3(0.6, 0.6, 1),
+                             glm::vec3(0.6, 0.6, 1), 32.0f});
+    model_rock.translate(glm::vec3(0, 0, -0.5f));
+    model_rock.scale(0.5);
 }
 
 void Garden::init(int width, int height) {
@@ -65,15 +73,18 @@ void Garden::init(int width, int height) {
     bee = Bee(&models.at(0), &models.at(1));
     update_projection(width, height);
 
-    set_reflection_model(false);
+    set_reflection_model(reflection_model);
     update_sun(0.25f);
     update_sky(0.25f);
-    update_camera(glm::vec3(5, -17, 7), glm::vec3(0, 0, 2));
+
+    change_camera(0);
+    set_flower_destination(0);
 }
 
 void Garden::update(float dt) {
     bee.update(dt);
-    update_camera(glm::vec3(20, 0, 7), bee.get_position());
+    update_time(dt);
+    update_camera();
 }
 
 void Garden::update_sun(float time) {
@@ -113,7 +124,7 @@ void Garden::draw() {
     }
 }
 
-void Garden::update_camera(glm::vec3 position, glm::vec3 looking_at) {
+void Garden::set_camera(glm::vec3 position, glm::vec3 looking_at) {
     for (auto &model : models) {
         model.set_view_matrix(
             glm::lookAt(position, looking_at, glm::vec3(0, 0, 1)));
@@ -154,3 +165,50 @@ void Garden::set_flower_destination(int index) {
 }
 
 glm::vec3 Garden::get_bee_destination() { return bee.get_destination(); }
+
+void Garden::toggle_day() {
+    time_until_target_day_time = 2;
+    target_day_time = day ? 0.51f : 0.25f;
+    day = !day;
+}
+
+void Garden::update_time(float dt) {
+    if (time_until_target_day_time < 0) {
+        return;
+    }
+    day_time += (target_day_time - day_time) * dt / time_until_target_day_time;
+    if (day_time)
+        time_until_target_day_time -= dt;
+    update_sky(day_time);
+    update_sun(day_time);
+}
+
+void Garden::change_camera(int index) {
+    if (index == 0) {
+        set_camera({-10, 10, 7}, {0, 0, 3});
+        // set_camera({0, 0.1, 7}, {0, 0, 3});
+    }
+    camera = index;
+}
+
+void Garden::update_camera() {
+    switch (camera) {
+    case 1:
+        set_camera({10, 10, 7}, bee.get_position());
+        break;
+    case 2:
+        glm::vec3 offset = glm::vec3(0, 0, 0);
+        glm::vec3 bee_dir = glm::normalize(bee.get_velocity());
+        glm::vec3 camera_pos = bee.get_position() - 2.0f * bee_dir + offset;
+        if (camera_pos.z < 0)
+            camera_pos.z = 0;
+        glm::vec3 camera_dir = camera_pos + bee_dir + offset;
+        set_camera(camera_pos, camera_dir);
+        break;
+    }
+}
+
+void Garden::toggle_reflection_model() {
+    reflection_model = !reflection_model;
+    set_reflection_model(reflection_model);
+}

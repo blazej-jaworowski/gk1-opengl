@@ -24,4 +24,5 @@ class Bee {
     void set_destination(glm::vec3 dest, float time = -1);
     glm::vec3 get_destination();
     const glm::vec3 &get_position() const;
+    const glm::vec3 &get_velocity() const;
 };

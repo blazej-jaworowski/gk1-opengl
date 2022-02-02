@@ -82,37 +82,52 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
     if (action != GLFW_PRESS)
         return;
 
-    float step = 0.2f;
-    glm::vec3 translation{};
+    // float step = 0.2f;
+    // glm::vec3 translation{};
     switch (key) {
-    case GLFW_KEY_W:
-        translation.x -= step;
-        break;
-    case GLFW_KEY_S:
-        translation.x += step;
-        break;
-    case GLFW_KEY_A:
-        translation.y -= step;
-        break;
-    case GLFW_KEY_D:
-        translation.y += step;
-        break;
-    case GLFW_KEY_Q:
-        translation.z -= step;
-        break;
-    case GLFW_KEY_E:
-        translation.z += step;
-        break;
+    // case GLFW_KEY_W:
+    //     translation.x -= step;
+    //     break;
+    // case GLFW_KEY_S:
+    //     translation.x += step;
+    //     break;
+    // case GLFW_KEY_A:
+    //     translation.y -= step;
+    //     break;
+    // case GLFW_KEY_D:
+    //     translation.y += step;
+    //     break;
+    // case GLFW_KEY_Q:
+    //     translation.z -= step;
+    //     break;
+    // case GLFW_KEY_E:
+    //     translation.z += step;
+    //     break;
     case GLFW_KEY_1:
         w->garden.set_flower_destination(0);
         break;
     case GLFW_KEY_2:
         w->garden.set_flower_destination(1);
         break;
+    case GLFW_KEY_N:
+        w->garden.toggle_day();
+        break;
+    case GLFW_KEY_B:
+        w->garden.toggle_reflection_model();
+        break;
+    case GLFW_KEY_8:
+        w->garden.change_camera(0);
+        break;
+    case GLFW_KEY_9:
+        w->garden.change_camera(1);
+        break;
+    case GLFW_KEY_0:
+        w->garden.change_camera(2);
+        break;
     }
 
-    translation += w->garden.get_bee_destination();
-    w->garden.set_bee_destination(translation);
+    // translation += w->garden.get_bee_destination();
+    // w->garden.set_bee_destination(translation);
 
     // std::cout << translation.x << ' ' << translation.y << ' ' <<
     // translation.z

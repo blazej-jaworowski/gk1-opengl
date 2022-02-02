@@ -8,7 +8,7 @@ Bee::Bee() {}
 
 Bee::Bee(Model *bee_model, Model *destination_model)
     : bee_model(bee_model), destination_model(destination_model),
-      position(0, 0, 3), velocity(0, 1, 1), target(0, 0, 3) {
+      position(0, 0, 3), velocity(0, 1, 1), target{} {
     set_destination(glm::vec3(10, 0, 3), 10);
     update_model();
 }
@@ -73,3 +73,5 @@ void Bee::set_destination(glm::vec3 dest, float time) {
 glm::vec3 Bee::get_destination() { return destination; }
 
 const glm::vec3 &Bee::get_position() const { return position; }
+
+const glm::vec3 &Bee::get_velocity() const { return velocity; }
