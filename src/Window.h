@@ -12,6 +12,9 @@ class Window {
     GLFWwindow *window;
     void loop();
 
+    static void key_callback(GLFWwindow *window, int key, int scancode,
+                             int action, int mods);
+
   public:
     Garden garden;
 

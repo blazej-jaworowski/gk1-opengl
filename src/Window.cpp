@@ -42,9 +42,11 @@ void Window::run() {
     glfwSetFramebufferSizeCallback(
         window, [](GLFWwindow *window, int width, int height) {
             glViewport(0, 0, width, height);
-            Window *w = (Window *)glfwGetWindowUserPointer(window);
+            Window *w =
+                reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
             w->update_size_values(width, height);
         });
+    glfwSetKeyCallback(window, Window::key_callback);
 
     loop();
 }
@@ -71,4 +73,48 @@ void Window::update_size_values(int width, int height) {
     this->width = width;
     this->height = height;
     garden.update_projection(width, height);
+}
+
+void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
+                          int mods) {
+    Window *w = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+
+    if (action != GLFW_PRESS)
+        return;
+
+    float step = 0.2f;
+    glm::vec3 translation{};
+    switch (key) {
+    case GLFW_KEY_W:
+        translation.x -= step;
+        break;
+    case GLFW_KEY_S:
+        translation.x += step;
+        break;
+    case GLFW_KEY_A:
+        translation.y -= step;
+        break;
+    case GLFW_KEY_D:
+        translation.y += step;
+        break;
+    case GLFW_KEY_Q:
+        translation.z -= step;
+        break;
+    case GLFW_KEY_E:
+        translation.z += step;
+        break;
+    case GLFW_KEY_1:
+        w->garden.set_flower_destination(0);
+        break;
+    case GLFW_KEY_2:
+        w->garden.set_flower_destination(1);
+        break;
+    }
+
+    translation += w->garden.get_bee_destination();
+    w->garden.set_bee_destination(translation);
+
+    // std::cout << translation.x << ' ' << translation.y << ' ' <<
+    // translation.z
+    //           << '\n';
 }

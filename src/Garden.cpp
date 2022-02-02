@@ -17,41 +17,52 @@ Model &Garden::add_model_from_files(std::string obj_filename,
 
 void Garden::add_scene_models() {
     // Bee always first
-    Model &model =
+    Model &model_bee =
         add_model_from_files("models/bee.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model.set_material({glm::vec3(0.913, 0.737, 0.1841),
-                        glm::vec3(0.913, 0.737, 0.1841),
-                        glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
-    model.scale(0.2);
+    model_bee.set_material({glm::vec3(0.913, 0.737, 0.1841),
+                            glm::vec3(0.913, 0.737, 0.1841),
+                            glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
+    model_bee.scale(0.2);
 
-    model =
+    // Destination sphere always second
+    Model &model_sphere =
+        add_model_from_files("models/sphere.obj", "shaders/vertex_shader.vert",
+                             "shaders/fragment_shader.frag");
+    model_sphere.set_material(
+        {glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), glm::vec3(1, 1, 1), 32.0f});
+    model_sphere.scale(0.02);
+
+    Model &model_plane =
         add_model_from_files("models/plane.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model.set_material({glm::vec3(0, 0.858, 0.023), glm::vec3(0, 0.858, 0.023),
-                        glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
+    model_plane.set_material({glm::vec3(0, 0.858, 0.023),
+                              glm::vec3(0, 0.858, 0.023),
+                              glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
 
-    model =
+    Model &model_rose1 =
         add_model_from_files("models/rose.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model.set_material(
+    model_rose1.set_material(
         {glm::vec3(1, 0, 0), glm::vec3(1, 0, 0), glm::vec3(1, 0, 0), 32.0f});
-    model.rotate(0.9, glm::vec3(0, 1, 0));
-    model.translate(glm::vec3(1, 1, 2));
+    model_rose1.rotate(0.9, glm::vec3(0, 1, 0));
+    model_rose1.translate(glm::vec3(2, 2, 2));
+    destinations.push_back(glm::vec3(2, 3.2, 3.8));
 
-    model =
+    Model &model_rose2 =
         add_model_from_files("models/rose2.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model.set_material(
+    model_rose2.set_material(
         {glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), 32.0f});
-    model.rotate(M_PI_2, glm::vec3(1, 0, 0));
-    model.scale(0.2f);
-    model.translate(glm::vec3(-1.2, -1.2, 0));
+    model_rose2.rotate(M_PI_2, glm::vec3(1, 0, 0));
+    model_rose2.scale(0.2f);
+    model_rose2.translate(glm::vec3(-2, -2, 0));
+    destinations.push_back(glm::vec3(-2, -2.2, 3.2));
 }
 
 void Garden::init(int width, int height) {
     add_scene_models();
-    bee = Bee(&models.at(0));
+    bee = Bee(&models.at(0), &models.at(1));
     update_projection(width, height);
 
     set_reflection_model(false);
@@ -135,3 +146,11 @@ void Garden::set_reflection_model(bool blinn) {
         model.set_reflection_model(blinn);
     }
 }
+
+void Garden::set_bee_destination(glm::vec3 dest) { bee.set_destination(dest); }
+
+void Garden::set_flower_destination(int index) {
+    set_bee_destination(destinations.at(index));
+}
+
+glm::vec3 Garden::get_bee_destination() { return bee.get_destination(); }

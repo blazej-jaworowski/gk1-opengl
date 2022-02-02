@@ -6,9 +6,9 @@
 
 Bee::Bee() {}
 
-Bee::Bee(Model *bee_model)
-    : bee_model(bee_model), position(0, 0, 3), velocity(0, 1, 1),
-      target(0, 0, 3) {
+Bee::Bee(Model *bee_model, Model *destination_model)
+    : bee_model(bee_model), destination_model(destination_model),
+      position(0, 0, 3), velocity(0, 1, 1), target(0, 0, 3) {
     set_destination(glm::vec3(10, 0, 3), 10);
     update_model();
 }
@@ -62,8 +62,14 @@ void Bee::update_model() {
 }
 
 void Bee::set_destination(glm::vec3 dest, float time) {
+    if (time < 0) {
+        time = glm::distance(dest, position);
+    }
     destination = dest;
     time_until_destination = time;
+    destination_model->set_position(dest);
 }
+
+glm::vec3 Bee::get_destination() { return destination; }
 
 const glm::vec3 &Bee::get_position() const { return position; }

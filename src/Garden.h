@@ -11,6 +11,8 @@ class Garden {
   private:
     std::vector<Model> models;
     Bee bee;
+    std::vector<glm::vec3> destinations;
+
     glm::vec3 get_sky_color(float time);
     glm::vec3 get_sun_color(float time);
     void update_sun(float time);
@@ -30,4 +32,7 @@ class Garden {
                        int index);
     void update(float dt);
     void draw();
+    void set_bee_destination(glm::vec3 dest);
+    void set_flower_destination(int index);
+    glm::vec3 get_bee_destination();
 };

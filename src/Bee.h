@@ -4,6 +4,7 @@
 
 class Bee {
     Model *bee_model;
+    Model *destination_model;
 
     glm::vec3 position;
     glm::vec3 velocity;
@@ -18,8 +19,9 @@ class Bee {
 
   public:
     Bee();
-    Bee(Model *bee_model);
+    Bee(Model *bee_model, Model *destination_model);
     void update(float dt);
-    void set_destination(glm::vec3 dest, float time);
+    void set_destination(glm::vec3 dest, float time = -1);
+    glm::vec3 get_destination();
     const glm::vec3 &get_position() const;
 };
