@@ -59,12 +59,21 @@ void Garden::add_scene_models() {
     model_rose2.translate(glm::vec3(-2, -2, 0));
     destinations.push_back(glm::vec3(-2, -2.2, 3.2));
 
+    Model &model_poppy =
+        add_model_from_files("models/poppy.obj", "shaders/vertex_shader.vert",
+                             "shaders/fragment_shader.frag");
+    model_poppy.set_material(
+        {glm::vec3(1, 1, 0), glm::vec3(1, 1, 0), glm::vec3(1, 1, 0), 32.0f});
+    model_poppy.rotate(M_PI_2, glm::vec3(1, 0, 0));
+    model_poppy.translate({0.5, -2.5, -0.5});
+    destinations.push_back(glm::vec3(0.6, -2.4, 1.8));
+
     Model &model_rock =
         add_model_from_files("models/sphere.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
     model_rock.set_material({glm::vec3(0.6, 0.6, 1), glm::vec3(0.6, 0.6, 1),
                              glm::vec3(0.6, 0.6, 1), 32.0f});
-    model_rock.translate(glm::vec3(0, 0, -0.5f));
+    model_rock.translate(glm::vec3(1, 0, -0.5f));
     model_rock.scale(0.5);
 }
 
@@ -79,12 +88,38 @@ void Garden::init(int width, int height) {
 
     change_camera(0);
     set_flower_destination(0);
+    set_spot_light({{0.1, 0.1, 0.1},
+                    {1, 1, 1},
+                    {1, 1, 1},
+                    1,
+                    0.22,
+                    0.20,
+                    {0.6, -2.4, 1.5},
+                    {0, 0, 1},
+                    -1},
+                   1);
 }
 
 void Garden::update(float dt) {
     bee.update(dt);
     update_time(dt);
     update_camera();
+    update_spotlight();
+}
+
+void Garden::update_spotlight() {
+    glm::vec3 position = bee.get_position();
+    glm::vec3 direction = glm::normalize(bee.get_destination() - position);
+    set_spot_light({{0.1, 0.1, 0.1},
+                    {1, 1, 1},
+                    {1, 1, 1},
+                    1,
+                    0.14,
+                    0.07,
+                    position,
+                    direction,
+                    0.95f},
+                   0);
 }
 
 void Garden::update_sun(float time) {
@@ -211,4 +246,10 @@ void Garden::update_camera() {
 void Garden::toggle_reflection_model() {
     reflection_model = !reflection_model;
     set_reflection_model(reflection_model);
+}
+
+void Garden::set_spot_light(SpotLight spot_light, int index) {
+    for (Model &model : models) {
+        model.set_spot_light(spot_light, index);
+    }
 }

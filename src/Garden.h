@@ -42,6 +42,7 @@ class Garden {
     void set_dir_light(DirLight sun_light, int index);
     void set_dir_light(float r, float g, float b, glm::vec3 direction,
                        int index);
+    void set_spot_light(SpotLight spot_light, int index);
     void update(float dt);
     void draw();
     void set_bee_destination(glm::vec3 dest);
@@ -49,4 +50,5 @@ class Garden {
     glm::vec3 get_bee_destination();
     void toggle_day();
     void change_camera(int index);
+    void update_spotlight();
 };

@@ -33,6 +33,7 @@ class Model {
     void set_projection_matrix(glm::mat4 projection_matrix);
     void set_material(Material material);
     void set_dir_light(DirLight sun_light, int index);
+    void set_spot_light(SpotLight spot_light, int index);
     void update_model_matrix();
     void translate(glm::vec3 v);
     void set_position(glm::vec3 position);

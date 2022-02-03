@@ -109,6 +109,9 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
     case GLFW_KEY_2:
         w->garden.set_flower_destination(1);
         break;
+    case GLFW_KEY_3:
+        w->garden.set_flower_destination(2);
+        break;
     case GLFW_KEY_N:
         w->garden.toggle_day();
         break;

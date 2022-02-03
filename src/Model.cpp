@@ -194,3 +194,24 @@ void Model::set_position(glm::vec3 position) {
     this->position = position;
     update_model_matrix();
 }
+
+void Model::set_spot_light(SpotLight spot_light, int index) {
+    set_vec3_uniform("spot_lights[" + std::to_string(index) + "].ambient",
+                     spot_light.ambient);
+    set_vec3_uniform("spot_lights[" + std::to_string(index) + "].diffuse",
+                     spot_light.diffuse);
+    set_vec3_uniform("spot_lights[" + std::to_string(index) + "].specular",
+                     spot_light.specular);
+    set_float_uniform("spot_lights[" + std::to_string(index) + "].constant",
+                      spot_light.constant);
+    set_float_uniform("spot_lights[" + std::to_string(index) + "].linear",
+                      spot_light.linear);
+    set_float_uniform("spot_lights[" + std::to_string(index) + "].quadratic",
+                      spot_light.quadratic);
+    set_vec3_uniform("spot_lights[" + std::to_string(index) + "].position",
+                     spot_light.position);
+    set_vec3_uniform("spot_lights[" + std::to_string(index) + "].direction",
+                     spot_light.direction);
+    set_float_uniform("spot_lights[" + std::to_string(index) + "].cutoff",
+                      spot_light.cutoff);
+}
