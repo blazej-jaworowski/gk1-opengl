@@ -36,15 +36,15 @@ void Garden::add_scene_models() {
     Model &model_plane =
         add_model_from_files("models/plane.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model_plane.set_material({glm::vec3(0, 0.858, 0.023),
-                              glm::vec3(0, 0.858, 0.023),
+    model_plane.set_material({glm::vec3(0, 0.658, 0.113),
+                              glm::vec3(0, 0.658, 0.113),
                               glm::vec3(0.0f, 0.0f, 0.0f), 1.0f});
 
     Model &model_rose1 =
         add_model_from_files("models/rose.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model_rose1.set_material(
-        {glm::vec3(1, 0, 0), glm::vec3(1, 0, 0), glm::vec3(1, 0, 0), 32.0f});
+    model_rose1.set_material({glm::vec3(0.8, 0, 0), glm::vec3(0.8, 0, 0),
+                              glm::vec3(0.8, 0, 0), 32.0f});
     model_rose1.rotate(0.9, glm::vec3(0, 1, 0));
     model_rose1.translate(glm::vec3(2, 2, 2));
     destinations.push_back(glm::vec3(2, 3.2, 3.8));
@@ -52,8 +52,8 @@ void Garden::add_scene_models() {
     Model &model_rose2 =
         add_model_from_files("models/rose2.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model_rose2.set_material(
-        {glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), glm::vec3(0, 0, 1), 32.0f});
+    model_rose2.set_material({glm::vec3(0, 0, 0.8), glm::vec3(0, 0, 0.8),
+                              glm::vec3(0, 0, 0.8), 32.0f});
     model_rose2.rotate(M_PI_2, glm::vec3(1, 0, 0));
     model_rose2.scale(0.2f);
     model_rose2.translate(glm::vec3(-2, -2, 0));
@@ -62,8 +62,8 @@ void Garden::add_scene_models() {
     Model &model_poppy =
         add_model_from_files("models/poppy.obj", "shaders/vertex_shader.vert",
                              "shaders/fragment_shader.frag");
-    model_poppy.set_material(
-        {glm::vec3(1, 1, 0), glm::vec3(1, 1, 0), glm::vec3(1, 1, 0), 32.0f});
+    model_poppy.set_material({glm::vec3(0.8, 0.8, 0), glm::vec3(0.8, 0.8, 0),
+                              glm::vec3(0.8, 0.8, 0), 32.0f});
     model_poppy.rotate(M_PI_2, glm::vec3(1, 0, 0));
     model_poppy.translate({0.5, -2.5, -0.5});
     destinations.push_back(glm::vec3(0.6, -2.4, 1.8));
@@ -88,7 +88,7 @@ void Garden::init(int width, int height) {
 
     change_camera(0);
     set_flower_destination(0);
-    set_spot_light({{0.1, 0.1, 0.1},
+    set_spot_light({{0, 0, 0},
                     {1, 1, 1},
                     {1, 1, 1},
                     1,
@@ -110,7 +110,7 @@ void Garden::update(float dt) {
 void Garden::update_spotlight() {
     glm::vec3 position = bee.get_position();
     glm::vec3 direction = glm::normalize(bee.get_destination() - position);
-    set_spot_light({{0.1, 0.1, 0.1},
+    set_spot_light({{0, 0, 0},
                     {1, 1, 1},
                     {1, 1, 1},
                     1,
