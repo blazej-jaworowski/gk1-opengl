@@ -79,17 +79,14 @@ void Garden::add_scene_models() {
     model_rock.scale(0.5);
 }
 
-void Garden::init(int width, int height) {
-    add_scene_models();
-    bee = Bee(&models.at(0), &models.at(1));
+void Garden::init_uniforms(int width, int height) {
     update_projection(width, height);
 
     set_reflection_model(reflection_model);
-    set_fog_color(glm::vec3(0.7f));
-    update_sun(0.25f);
-    update_sky(0.25f);
+    update_sun(day_time);
+    update_sky(day_time);
 
-    change_camera(0);
+    change_camera(camera);
     set_flower_destination(0);
     set_spot_light({{0, 0, 0},
                     {1, 1, 1},
@@ -101,6 +98,12 @@ void Garden::init(int width, int height) {
                     {0, 0, 1},
                     -1},
                    1);
+}
+
+void Garden::init(int width, int height) {
+    add_scene_models();
+    bee = Bee(&models.at(0), &models.at(1));
+    init_uniforms(width, height);
 }
 
 void Garden::update(float dt) {
@@ -172,6 +175,8 @@ void Garden::set_camera(glm::vec3 position, glm::vec3 looking_at) {
 }
 
 void Garden::update_projection(int width, int height) {
+    this->width = width;
+    this->height = height;
     for (auto &model : models) {
         model.set_projection_matrix(glm::perspective(
             glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f));
@@ -213,16 +218,15 @@ void Garden::toggle_day() {
 }
 
 void Garden::update_time(float dt) {
+    set_fog_color(glm::vec3((0.51f - day_time) * 0.7f / 0.26f));
+    update_sky(day_time);
+    update_sun(day_time);
     if (time_until_target_day_time < 0) {
         return;
     }
     day_time += (target_day_time - day_time) * dt / time_until_target_day_time;
     if (day_time)
         time_until_target_day_time -= dt;
-
-    set_fog_color(glm::vec3((0.51f - day_time) * 0.7f / 0.26f));
-    update_sky(day_time);
-    update_sun(day_time);
 }
 
 void Garden::change_camera(int index) {
@@ -292,8 +296,8 @@ void Garden::update_fog(float dt) {
     if (time_until_fog <= 0) {
         fog_dist = target;
         set_fog_dist(fog_dist);
-        if (!fog_enabled) {
-            set_fog_enabled(false);
+        if (fog_enabled) {
+            set_fog_enabled(fog_enabled);
         }
         return;
     }
@@ -310,4 +314,13 @@ void Garden::set_fog_color(glm::vec3 fog_color) {
     for (Model &model : models) {
         model.set_fog_color(fog_color);
     }
+}
+
+void Garden::change_shaders(std::string vertex, std::string fragment) {
+    for (Model &model : models) {
+        model.link_shaders(vertex, fragment);
+        model.reset_material();
+        model.update_model_matrix();
+    }
+    init_uniforms(width, height);
 }

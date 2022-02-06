@@ -129,6 +129,7 @@ void Model::set_float_uniform(std::string name, float value) {
 }
 
 void Model::set_material(Material material) {
+    this->material = material;
     set_vec3_uniform("material.ambient", material.ambient);
     set_vec3_uniform("material.diffuse", material.diffuse);
     set_vec3_uniform("material.specular", material.specular);
@@ -229,3 +230,5 @@ void Model::set_fog_enabled(bool fog_enabled) {
 void Model::set_fog_color(glm::vec3 fog_color) {
     set_vec3_uniform("fog_color", fog_color);
 }
+
+void Model::reset_material() { set_material(this->material); }

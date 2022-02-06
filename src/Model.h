@@ -16,6 +16,7 @@ class Model {
     glm::vec3 position;
     glm::mat4 rotation;
     glm::vec3 model_scale;
+    Material material;
 
     void set_mat4_uniform(std::string name, glm::mat4 value);
     void set_vec3_uniform(std::string name, glm::vec3 value);
@@ -33,6 +34,7 @@ class Model {
     void set_view_matrix(glm::mat4 view_matrix);
     void set_projection_matrix(glm::mat4 projection_matrix);
     void set_material(Material material);
+    void reset_material();
     void set_dir_light(DirLight sun_light, int index);
     void set_spot_light(SpotLight spot_light, int index);
     void update_model_matrix();

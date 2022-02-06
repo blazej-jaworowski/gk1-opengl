@@ -9,6 +9,8 @@
 
 class Garden {
   private:
+    int width, height;
+
     std::vector<Model> models;
     Bee bee;
     std::vector<glm::vec3> destinations;
@@ -39,6 +41,7 @@ class Garden {
     void set_fog_enabled(bool fog_enabled);
     void set_fog_color(glm::vec3 fog_color);
     void update_fog(float dt);
+    void init_uniforms(int width, int height);
 
   public:
     void init(int width, int height);
@@ -61,4 +64,5 @@ class Garden {
     void change_camera(int index);
     void update_spotlight();
     void toggle_fog();
+    void change_shaders(std::string vertex, std::string fragment);
 };

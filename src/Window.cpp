@@ -130,6 +130,18 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
     case GLFW_KEY_0:
         w->garden.change_camera(2);
         break;
+    case GLFW_KEY_U:
+        w->garden.change_shaders("shaders/vertex_shader.vert",
+                                 "shaders/constant_fragment_shader.frag");
+        break;
+    case GLFW_KEY_I:
+        w->garden.change_shaders("shaders/vertex_shader.vert",
+                                 "shaders/fragment_shader.frag");
+        break;
+    case GLFW_KEY_O:
+        w->garden.change_shaders("shaders/gouraud_vertex_shader.vert",
+                                 "shaders/gouraud_fragment_shader.frag");
+        break;
     }
 
     // translation += w->garden.get_bee_destination();
