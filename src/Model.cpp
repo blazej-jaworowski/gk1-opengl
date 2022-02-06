@@ -84,7 +84,7 @@ void Model::set_mat4_uniform(std::string name, glm::mat4 value) {
     glUseProgram(shader_program);
     int32_t location = glGetUniformLocation(shader_program, name.c_str());
     if (location == -1) {
-        std::cerr << "ERROR: Uniform " << name << " not found\n";
+        // std::cerr << "ERROR: Uniform " << name << " not found\n";
         return;
     }
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
@@ -112,7 +112,7 @@ void Model::set_vec3_uniform(std::string name, glm::vec3 value) {
     glUseProgram(shader_program);
     int32_t location = glGetUniformLocation(shader_program, name.c_str());
     if (location == -1) {
-        std::cerr << "ERROR: Uniform " << name << " not found\n";
+        // std::cerr << "ERROR: Uniform " << name << " not found\n";
         return;
     }
     glUniform3f(location, value.x, value.y, value.z);
@@ -122,7 +122,7 @@ void Model::set_float_uniform(std::string name, float value) {
     glUseProgram(shader_program);
     int32_t location = glGetUniformLocation(shader_program, name.c_str());
     if (location == -1) {
-        std::cerr << "ERROR: Uniform " << name << " not found\n";
+        // std::cerr << "ERROR: Uniform " << name << " not found\n";
         return;
     }
     glUniform1f(location, value);
@@ -183,7 +183,7 @@ void Model::set_bool_uniform(std::string name, bool value) {
     glUseProgram(shader_program);
     int32_t location = glGetUniformLocation(shader_program, name.c_str());
     if (location == -1) {
-        std::cerr << "ERROR: Uniform " << name << " not found\n";
+        // std::cerr << "ERROR: Uniform " << name << " not found\n";
         return;
     }
     glUniform1i(location, value);
