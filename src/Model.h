@@ -20,6 +20,7 @@ class Model {
     void set_mat4_uniform(std::string name, glm::mat4 value);
     void set_vec3_uniform(std::string name, glm::vec3 value);
     void set_float_uniform(std::string name, float value);
+    void set_bool_uniform(std::string name, bool value);
 
   public:
     Model(float *vertices, float *normals, int vertex_count, uint32_t *faces,
@@ -41,4 +42,7 @@ class Model {
     void set_rotation(glm::mat4 r);
     void scale(float s);
     void scale(glm::vec3 s);
+    void set_fog_dist(float fog_dist);
+    void set_fog_enabled(bool fog_enabled);
+    void set_fog_color(glm::vec3 fog_color);
 };

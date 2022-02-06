@@ -178,16 +178,18 @@ void Model::scale(float s) {
     update_model_matrix();
 }
 
-void Model::set_reflection_model(bool blinn) {
+void Model::set_bool_uniform(std::string name, bool value) {
     glUseProgram(shader_program);
-    int32_t location = glGetUniformLocation(shader_program, "blinn_reflection");
+    int32_t location = glGetUniformLocation(shader_program, name.c_str());
     if (location == -1) {
-        std::cerr << "ERROR: Uniform "
-                  << "blinn_reflection"
-                  << " not found\n";
+        std::cerr << "ERROR: Uniform " << name << " not found\n";
         return;
     }
-    glUniform1i(location, blinn);
+    glUniform1i(location, value);
+}
+
+void Model::set_reflection_model(bool blinn) {
+    set_bool_uniform("blinn_reflection", blinn);
 }
 
 void Model::set_position(glm::vec3 position) {
@@ -214,4 +216,16 @@ void Model::set_spot_light(SpotLight spot_light, int index) {
                      spot_light.direction);
     set_float_uniform("spot_lights[" + std::to_string(index) + "].cutoff",
                       spot_light.cutoff);
+}
+
+void Model::set_fog_dist(float fog_dist) {
+    set_float_uniform("fog_dist", fog_dist);
+}
+
+void Model::set_fog_enabled(bool fog_enabled) {
+    set_bool_uniform("fog_enabled", fog_enabled);
+}
+
+void Model::set_fog_color(glm::vec3 fog_color) {
+    set_vec3_uniform("fog_color", fog_color);
 }

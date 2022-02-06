@@ -118,6 +118,9 @@ void Window::key_callback(GLFWwindow *window, int key, int scancode, int action,
     case GLFW_KEY_B:
         w->garden.toggle_reflection_model();
         break;
+    case GLFW_KEY_V:
+        w->garden.toggle_fog();
+        break;
     case GLFW_KEY_8:
         w->garden.change_camera(0);
         break;

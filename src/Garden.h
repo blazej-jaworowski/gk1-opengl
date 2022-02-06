@@ -22,14 +22,23 @@ class Garden {
 
     bool reflection_model = false;
 
-    glm::vec3 get_sky_color(float time);
-    glm::vec3 get_sun_color(float time);
+    float time_until_fog = 0;
+    float fog_dist = 1000;
+    bool fog_enabled = false;
+
+    glm::vec3 sky_color;
+    glm::vec3 fog_color;
+
     void update_sun(float time);
     void update_sky(float time);
     void update_time(float dt);
     void set_camera(glm::vec3 pos, glm::vec3 looking_at);
     void update_camera();
     void set_reflection_model(bool blinn);
+    void set_fog_dist(float fog_dist);
+    void set_fog_enabled(bool fog_enabled);
+    void set_fog_color(glm::vec3 fog_color);
+    void update_fog(float dt);
 
   public:
     void init(int width, int height);
@@ -51,4 +60,5 @@ class Garden {
     void toggle_day();
     void change_camera(int index);
     void update_spotlight();
+    void toggle_fog();
 };

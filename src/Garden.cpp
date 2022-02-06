@@ -1,5 +1,7 @@
 #include "Garden.h"
 
+#include <iostream>
+
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -83,6 +85,7 @@ void Garden::init(int width, int height) {
     update_projection(width, height);
 
     set_reflection_model(reflection_model);
+    set_fog_color(glm::vec3(0.7f));
     update_sun(0.25f);
     update_sky(0.25f);
 
@@ -105,6 +108,7 @@ void Garden::update(float dt) {
     update_time(dt);
     update_camera();
     update_spotlight();
+    update_fog(dt);
 }
 
 void Garden::update_spotlight() {
@@ -145,11 +149,12 @@ void Garden::update_sky(float time) {
     glm::vec3 noon_color(0, 0.5, 1);
     float factor = std::sin(time * 2 * M_PI);
     if (factor > -0.2) {
-        glm::vec3 sky_color =
+        sky_color =
             factor * (noon_color + factor * (noon_color - sunset_color));
         glClearColor(sky_color.x, sky_color.y, sky_color.z, 1.0f);
     } else {
         glClearColor(0, 0, 0, 1);
+        sky_color = glm::vec3(0);
     }
 }
 
@@ -214,6 +219,8 @@ void Garden::update_time(float dt) {
     day_time += (target_day_time - day_time) * dt / time_until_target_day_time;
     if (day_time)
         time_until_target_day_time -= dt;
+
+    set_fog_color(glm::vec3((0.51f - day_time) * 0.7f / 0.26f));
     update_sky(day_time);
     update_sun(day_time);
 }
@@ -251,5 +258,56 @@ void Garden::toggle_reflection_model() {
 void Garden::set_spot_light(SpotLight spot_light, int index) {
     for (Model &model : models) {
         model.set_spot_light(spot_light, index);
+    }
+}
+
+void Garden::set_fog_dist(float fog_dist) {
+    for (Model &model : models) {
+        model.set_fog_dist(fog_dist);
+    }
+}
+
+void Garden::set_fog_enabled(bool fog_enabled) {
+    for (Model &model : models) {
+        model.set_fog_enabled(fog_enabled);
+    }
+}
+
+void Garden::toggle_fog() {
+    fog_enabled = !fog_enabled;
+    if (fog_enabled) {
+        set_fog_enabled(true);
+    }
+    time_until_fog = 2;
+}
+
+void Garden::update_fog(float dt) {
+    float sky_factor =
+        fog_enabled ? 1 - time_until_fog / 2 : time_until_fog / 2;
+    sky_factor = std::min(1.0f, sky_factor * 8);
+    glm::vec3 foggy_sky_color = glm::mix(sky_color, fog_color, sky_factor);
+    glClearColor(foggy_sky_color.x, foggy_sky_color.y, foggy_sky_color.z, 1);
+
+    float target = fog_enabled ? 20 : 1000;
+    if (time_until_fog <= 0) {
+        fog_dist = target;
+        set_fog_dist(fog_dist);
+        if (!fog_enabled) {
+            set_fog_enabled(false);
+        }
+        return;
+    }
+
+    float k = dt / time_until_fog;
+    k = fog_enabled ? std::sqrt(k) : k * k;
+    fog_dist += (target - fog_dist) * k;
+    set_fog_dist(fog_dist);
+    time_until_fog -= dt;
+}
+
+void Garden::set_fog_color(glm::vec3 fog_color) {
+    this->fog_color = fog_color;
+    for (Model &model : models) {
+        model.set_fog_color(fog_color);
     }
 }

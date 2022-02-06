@@ -43,6 +43,9 @@ uniform SpotLight spot_lights[SPOT_LIGHT_COUNT];
 
 uniform vec3 camera_pos;
 uniform bool blinn_reflection;
+uniform bool fog_enabled;
+uniform float fog_dist;
+uniform vec3 fog_color;
 
 vec3 get_dir_light(vec3 norm) {
     vec3 sum = vec3(0);
@@ -108,9 +111,21 @@ vec3 get_spot_light(vec3 norm) {
     return sum;
 }
 
+vec3 apply_fog(vec3 color, float ls, float le, vec3 fog_color) {
+    float dist = gl_FragCoord.z / gl_FragCoord.w;
+
+    float k = 1.0 - (le - dist) / (le - ls);
+    k = min(max(k, 0), 1);
+
+    return mix(color, fog_color, k);
+}
+
 void main()
 {
     vec3 norm = normalize(normal);
     vec3 color = get_dir_light(norm) + get_spot_light(norm);
+    if(fog_enabled) {
+        color = apply_fog(color, 2, fog_dist, fog_color);
+    }
     FragColor = vec4(color, 1.0);
 } 
